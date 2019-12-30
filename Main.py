@@ -1,15 +1,57 @@
 import os
-
-import discord
 from dotenv import load_dotenv
+import discord
+import Logger
+
 
 load_dotenv()
-token = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = os.getenv('DISCORD_GUILD')
+
+Logger.start()
 
 client = discord.Client()
 
+
 @client.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    for guild in client.guilds:
+        if guild.name == GUILD:
+            break
 
-client.run(token)
+    print(
+        f'{client.user} is connected to the following guild:\n'
+        f'{guild.name}(id: {guild.id})'
+    )
+    members = '\n - '.join([member.name for member in guild.members])
+    print(f'Guild Members:\n - {members}')
+
+
+@client.event
+async def on_connect():
+    print("Connected!")
+
+
+@client.event
+async def on_member_join(member):
+    channel = client.get_channel(660987946085646367)
+    await channel.send(f'Welcome {member.name}!')
+
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('!test'):
+        await message.channel.send('works!')
+
+
+@client.event
+async def on_error(event, *args, **kwargs):
+    with open('err.log', 'a') as f:
+        if event == 'on_message':
+            f.write(f'Unhandled message: {args[0]}\n')
+        else:
+            raise
+
+client.run(TOKEN)
