@@ -31,10 +31,11 @@ async def on_ready():
 async def on_connect():
     print("Connected!")
 
-'''
+
+@client.event
 async def on_member_join(member):
-    await message.channel.send(f'Welcome {member.name}!')
-'''
+    channel = client.get_channel(660987946085646367)
+    await channel.send(f'Welcome {member.name}!')
 
 
 @client.event
