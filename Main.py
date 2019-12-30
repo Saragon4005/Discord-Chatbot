@@ -27,6 +27,7 @@ async def on_ready():
     print(f'Guild Members:\n - {members}')
 
 
+@client.event
 async def on_connect():
     print("Connected!")
 
@@ -36,15 +37,15 @@ async def on_member_join(member):
 '''
 
 
+@client.event
 async def on_message(message):
-    print("message received!")
-    print(message.content)
     if message.author == client.user:
         return
     if message.content.startswith('!test'):
         await message.channel.send('works!')
 
 
+@client.event
 async def on_error(event, *args, **kwargs):
     with open('err.log', 'a') as f:
         if event == 'on_message':
