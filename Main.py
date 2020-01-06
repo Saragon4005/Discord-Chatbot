@@ -2,6 +2,7 @@
 import os
 from dotenv import load_dotenv
 import discord
+from discord.ext import commands
 import Logger
 
 
@@ -12,6 +13,13 @@ GUILD = os.getenv('DISCORD_GUILD')
 Logger.start()
 
 client = discord.Client()
+
+bot = commands.Bot(command_prefix='!')
+
+
+@bot.command(name="Test", help="Responds with 'works!'")
+async def test(ctx):
+    await ctx.send("works!")
 
 
 @client.event
@@ -56,3 +64,4 @@ async def on_error(event, *args, **kwargs):
             raise
 
 client.run(TOKEN)
+bot.run(TOKEN)
