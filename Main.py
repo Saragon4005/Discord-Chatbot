@@ -62,8 +62,6 @@ try:
     async def on_message(message):
         if message.author == client.user:
             return
-        if message.content.startswith('!test'):
-            await message.channel.send('works!')
         if message.content.incudes('<>'):
             Moirail[message.author] += 1
 
