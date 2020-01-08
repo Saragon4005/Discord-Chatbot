@@ -13,9 +13,9 @@ GUILD = os.getenv('DISCORD_GUILD')
 
 Logger.start()
 
-client = discord.Client()
+client = discord.Client()  # initialize discord client
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='&')  # initialize discord bot
 
 Moirail = {}
 
@@ -55,6 +55,7 @@ try:
 
     @client.event
     async def on_member_join(member):
+        # set announcements as current channel
         channel = client.get_channel(660987946085646367)
         await channel.send(f'Welcome {member.name}!')
 
@@ -64,6 +65,8 @@ try:
             return
         if message.content.incudes('<>'):
             Moirail[message.author] += 1
+        if message.content("<@629161995131682826>"):
+            message.channel.send(f"My prefix is {bot.command_prefix}")
 
     @client.event
     async def on_error(event, *args, **kwargs):
