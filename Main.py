@@ -18,14 +18,18 @@ client = discord.Client()
 bot = commands.Bot(command_prefix='!')
 
 Moirail = {}
-with open('Moirail.json', 'r') as fp:
-    Moirail = json.load(fp)
 
 
 def save():
     with open('Moirail.json', 'w') as fp:
         json.dump(Moirail, fp)
 
+
+try:
+    with open('Moirail.json', 'r') as fp:
+        Moirail = json.load(fp)
+except FileNotFoundError:
+    pass
 
 try:
     @bot.command(name="Test", help="Responds with 'works!'")
@@ -70,7 +74,7 @@ try:
                 f.write(f'Unhandled message: {args[0]}\n')
             else:
                 raise
-except:
+except Exception:
     save()
     raise
 
