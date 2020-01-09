@@ -65,7 +65,7 @@ try:
         if message.author == client.user:
             return
         if '<>' in message.content:
-            Moirail[message.author.name] += 1
+            Moirail[message.author.username] += 1
         if message.content == "<@629161995131682826>":
             message.channel.send(f"My prefix is {bot.command_prefix}")
 
@@ -77,9 +77,9 @@ try:
             else:
                 raise
 
+    client.run(TOKEN)
+    bot.run(TOKEN)
+
 except Exception:
     save()
     raise
-
-client.run(TOKEN)
-bot.run(TOKEN)
