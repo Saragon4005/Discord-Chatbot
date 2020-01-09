@@ -65,9 +65,13 @@ try:
         if message.author == client.user:
             return
         if '<>' in message.content:
-            Moirail[message.author.username] += 1
+            try:
+                Moirail[message.author.name] += 1
+            except KeyError:
+                Moirail[message.author.name] = 1
         if message.content == "<@629161995131682826>":
             message.channel.send(f"My prefix is {bot.command_prefix}")
+        print("message got")
 
     @client.event
     async def on_error(event, *args, **kwargs):
