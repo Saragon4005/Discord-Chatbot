@@ -32,6 +32,7 @@ except FileNotFoundError:
     pass
 
 try:
+
     @bot.command(name="Test", help="Responds with 'works!'")
     async def test(ctx):
         await ctx.send("works!")
@@ -63,9 +64,9 @@ try:
     async def on_message(message):
         if message.author == client.user:
             return
-        if message.content.incudes('<>'):
-            Moirail[message.author] += 1
-        if message.content("<@629161995131682826>"):
+        if '<>' in message.content:
+            Moirail[message.author.name] += 1
+        if message.content == "<@629161995131682826>":
             message.channel.send(f"My prefix is {bot.command_prefix}")
 
     @client.event
@@ -75,10 +76,10 @@ try:
                 f.write(f'Unhandled message: {args[0]}\n')
             else:
                 raise
+
 except Exception:
     save()
     raise
-
 
 client.run(TOKEN)
 bot.run(TOKEN)
