@@ -87,10 +87,10 @@ except Exception:  # Saves varibles before quitting
     raise
 
 # Starts bot. Might need to be disabled when running tests
-try:
+"""try:
     client.run(TOKEN)
     bot.run(TOKEN)
 
 except Exception:
     save()
-    raise
+    raise"""

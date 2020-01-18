@@ -1,9 +1,5 @@
 import Main
 
-#
-# WARNING! TESTS MAY NOT PASS IF MAIN STARTS THE CLIENT!
-#
-
 
 class message():  # Simulates a message as seen by the on_message fuction
     type = 0
