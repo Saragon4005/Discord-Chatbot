@@ -15,7 +15,7 @@ Logger.start()
 
 client = discord.Client()  # initialize discord client
 
-bot = commands.Bot(command_prefix='&')  # initialize discord bot
+bot = commands.Bot("&")  # initialize discord bot
 
 Moirail = {}
 
@@ -71,9 +71,8 @@ try:
                 Moirail[message.author.username] += 1
             except KeyError:
                 Moirail[message.author.username] = 1
-        if message.content == "<@629161995131682826>":
+        if message.content == f"<!@{client.user.id}>":
             message.channel.send(f"My prefix is {bot.command_prefix}")
-        print("message got")
 
     @client.event
     async def on_error(event, *args, **kwargs):
@@ -85,12 +84,3 @@ try:
 except Exception:  # Saves varibles before quitting
     save()
     raise
-
-# Starts bot. Might need to be disabled when running tests
-"""try:
-    client.run(TOKEN)
-    bot.run(TOKEN)
-
-except Exception:
-    save()
-    raise"""
