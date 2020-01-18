@@ -19,6 +19,8 @@ bot = commands.Bot(command_prefix='&')  # initialize discord bot
 
 Moirail = {}
 
+# saves variables to a json file
+
 
 def save():
     with open('Moirail.json', 'w') as fp:
@@ -66,9 +68,9 @@ try:
             return
         if '<>' in message.content:
             try:
-                Moirail[message.author.name] += 1
+                Moirail[message.author.username] += 1
             except KeyError:
-                Moirail[message.author.name] = 1
+                Moirail[message.author.username] = 1
         if message.content == "<@629161995131682826>":
             message.channel.send(f"My prefix is {bot.command_prefix}")
         print("message got")
@@ -80,7 +82,12 @@ try:
                 f.write(f'Unhandled message: {args[0]}\n')
             else:
                 raise
+except Exception:  # Saves varibles before quitting
+    save()
+    raise
 
+# Starts bot. Might need to be disabled when running tests
+try:
     client.run(TOKEN)
     bot.run(TOKEN)
 
