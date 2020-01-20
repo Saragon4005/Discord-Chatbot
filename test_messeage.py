@@ -19,7 +19,6 @@ class message():  # Simulates a message as seen by the on_message fuction
         joined_at = "2019-12-29T22:57:55.267000+00:00"
         hoisted_role = 660986670883274803
         deaf = False
-
     id = 664639523833249802
     flags = 0
     embeds = []
@@ -32,7 +31,6 @@ class message():  # Simulates a message as seen by the on_message fuction
         id = 212686680052727814
         discriminator = 2988
         avatar = "2175ab2713aa37ee3dfcb4fac5a5586f"
-
     attachments = []
     guild_id = 660979844179427368
 

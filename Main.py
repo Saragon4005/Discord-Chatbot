@@ -1,10 +1,12 @@
 #!/usr/bin/python3.8
+import json
 import os
+
 from dotenv import load_dotenv
+
 import discord
 from discord.ext import commands
 import Logger
-import json
 
 
 load_dotenv()
@@ -15,7 +17,7 @@ Logger.start()
 
 client = discord.Client()  # initialize discord client
 
-bot = commands.Bot("&")  # initialize discord bot
+bot = commands.Bot('&')  # initialize discord bot
 
 Moirail = {}
 
@@ -24,14 +26,17 @@ Moirail = {}
 
 def save():
     with open('Moirail.json', 'w') as fp:
+        print("Attemting save")
         json.dump(Moirail, fp)
 
 
 try:
     with open('Moirail.json', 'r') as fp:
         Moirail = json.load(fp)
+except json.decoder.JSONDecodeError:
+    print("JSON failed to read the data might be corrupted")
 except FileNotFoundError:
-    pass
+    print("No saves JSON found")
 
 try:
 
@@ -72,7 +77,7 @@ try:
             except KeyError:
                 Moirail[message.author.username] = 1
         if message.content == f"<!@{client.user.id}>":
-            message.channel.send(f"My prefix is {bot.command_prefix}")
+            await message.channel.send(f"My prefix is {bot.command_prefix}")
 
     @client.event
     async def on_error(event, *args, **kwargs):
@@ -81,6 +86,6 @@ try:
                 f.write(f'Unhandled message: {args[0]}\n')
             else:
                 raise
-except Exception:  # Saves varibles before quitting
+except Exception:  # Saves variables before quitting
     save()
     raise
