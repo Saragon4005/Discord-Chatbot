@@ -50,18 +50,11 @@ try:
 
     @bot.event
     async def on_ready():
-        for guild in bot.guilds:
-            if guild.name == GUILD:
-                break
-
         print(
-            f'{bot.user} is connected to the following guild:\n'
-            f'{guild.name}(id: {guild.id})\n'
+            f'{bot.user} is connected to Discord\n'
             f'With {bot.command_prefix} as prefix\n'
             f"Can be mentioned with <@!{bot.user.id}>"
         )
-        members = '\n - '.join([member.name for member in guild.members])
-        print(f'Guild Members:\n - {members}')
 
     @bot.event
     async def on_connect():
