@@ -40,12 +40,13 @@ try:
     @bot.command(name="test", help="Responds with 'works!'")
     async def test(ctx):
         print('test triggered!')
-        await ctx.message.send("works!")
+        await ctx.message.channel.send("works!")
 
     @bot.command(name="Moirail", help="Shows moirail counter for user")
     async def Moirail(ctx):
-        await ctx.send(f"{ctx.author} was platonic"
-                       f"{MoirailCounter[ctx.author]} times")
+        await ctx.message.channel.send(
+            f"{ctx.author.name} was platonic "
+            f"{MoirailCounter[ctx.author.name]} times")
 
     @bot.event
     async def on_ready():
@@ -71,9 +72,9 @@ try:
             return
         if '<>' in message.content:
             try:
-                MoirailCounter[message.author.username] += 1
+                MoirailCounter[message.author.name] += 1
             except KeyError:
-                MoirailCounter[message.author.username] = 1
+                MoirailCounter[message.author.name] = 1
         try:
             await bot.process_commands(message)
         except AttributeError:
@@ -82,8 +83,6 @@ try:
                   "This is normal for testing")
         # if message.content == f"<!@{bot.user.id}>":
         #    await message.channel.send(f"My prefix is {bot.command_prefix}")
-        if message.content == f"{bot.command_prefix}help":
-            await message.channel.send(bot.help_command.send_command_help())
 
     @bot.event
     async def on_error(event, *args, **kwargs):
