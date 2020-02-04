@@ -83,8 +83,6 @@ try:
                   "This is normal for testing")
         # if message.content == f"<!@{bot.user.id}>":
         #    await message.channel.send(f"My prefix is {bot.command_prefix}")
-        if message.content == f"{bot.command_prefix}help":
-            await message.channel.send(bot.help_command.send_command_help())
 
     @bot.event
     async def on_error(event, *args, **kwargs):
