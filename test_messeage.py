@@ -61,6 +61,6 @@ def custom_message(custom):
 
 
 async def test_moirail():
-    Main.Moirail = {}
+    Main.MoirailCounter = {}
     await Main.on_message(custom_message("<>"))
-    assert Main.Moirail == {'[HU/EN] Saragon': 1}
+    assert Main.MoirailCounter == {'[HU/EN] Saragon': 1}

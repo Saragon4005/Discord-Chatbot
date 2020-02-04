@@ -16,7 +16,7 @@ Logger.start()
 # initialize discord bot
 bot = commands.Bot(command_prefix='&', description='description')
 
-Moirail = {}
+MoirailCounter = {}
 
 # saves variables to a json file
 
@@ -24,12 +24,12 @@ Moirail = {}
 def save():
     with open('Moirail.json', 'w') as fp:
         print("Attemting save")
-        json.dump(Moirail, fp)
+        json.dump(MoirailCounter, fp)
 
 
 try:
     with open('Moirail.json', 'r') as fp:
-        Moirail = json.load(fp)
+        MoirailCounter = json.load(fp)
 except json.decoder.JSONDecodeError:
     print("JSON failed to read the data might be corrupted")
 except FileNotFoundError:
@@ -45,7 +45,7 @@ try:
     @bot.command(name="Moirail", help="Shows moirail counter for user")
     async def Moirail(ctx):
         await ctx.send(f"{ctx.author} was platonic"
-                       f"{Moirail[ctx.author]} times")
+                       f"{MoirailCounter[ctx.author]} times")
 
     @bot.event
     async def on_ready():
@@ -71,10 +71,15 @@ try:
             return
         if '<>' in message.content:
             try:
-                Moirail[message.author.username] += 1
+                MoirailCounter[message.author.username] += 1
             except KeyError:
-                Moirail[message.author.username] = 1
-        await bot.process_commands(message)
+                MoirailCounter[message.author.username] = 1
+        try:
+            await bot.process_commands(message)
+        except AttributeError:
+            print("Could not process commands \n"
+                  "This is could be due to bot not being started \n"
+                  "This is normal for testing")
         # if message.content == f"<!@{bot.user.id}>":
         #    await message.channel.send(f"My prefix is {bot.command_prefix}")
         if message.content == f"{bot.command_prefix}help":
