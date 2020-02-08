@@ -11,3 +11,6 @@ After all this is done Run.py needs to be executed using python3.8
 
 # Testing
 The tests are somewhat hard to use as this is a bot which responds to web events. I used pytest to test my functions as those can easily be tested with a fake message event.
+
+# Art
+Profile pic by Alexis N.
