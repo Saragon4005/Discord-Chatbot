@@ -33,7 +33,7 @@ try:
 except json.decoder.JSONDecodeError:
     print("JSON failed to read the data might be corrupted")
 except FileNotFoundError:
-    print("No saves JSON found")
+    print("No JSON saves found")
 
 try:
 
