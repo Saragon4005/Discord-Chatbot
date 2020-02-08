@@ -1,12 +1,12 @@
 #!/usr/bin/python3.8
+import atexit
 import json
 import os
 
 from dotenv import load_dotenv
 
-from discord.ext import commands
 import Logger
-
+from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -94,3 +94,10 @@ try:
 except Exception:  # Saves variables before quitting
     save()
     raise
+
+
+def exit_handler():
+    save()
+
+
+atexit.register(exit_handler)
