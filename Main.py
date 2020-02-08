@@ -14,7 +14,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 Logger.start()
 
 # initialize discord bot
-bot = commands.Bot(command_prefix='&', description='description')
+bot = commands.Bot(command_prefix='%', description='A Bot which does a thing')
 
 MoirailCounter = {}
 
