@@ -14,7 +14,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 Logger.start()
 
 # initialize discord bot
-bot = commands.Bot(command_prefix='%', description='A Bot which does a thing')
+bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
+                   case_insensitive=True)
 
 MoirailCounter = {}
 
@@ -42,11 +43,21 @@ try:
         print('test triggered!')
         await ctx.message.channel.send("works!")
 
-    @bot.command(name="Moirail", help="Shows moirail counter for user")
+    @bot.command(name="Moirail", help="Shows moirail counter for user",
+                 aliases=["h"])
     async def Moirail(ctx):
         await ctx.message.channel.send(
             f"{ctx.author.name} was platonic "
             f"{MoirailCounter[ctx.author.name]} times")
+
+    @bot.command(name="Description", help="Shows basic info about bot",
+                 aliases=["info", "desc", "i"])
+    async def description(ctx):
+        await ctx.message.channel.send(f'''```{bot.user}:{bot.description}
+        You can ask for {bot.command_prefix}help
+        Further information can be found on the github:
+        https://github.com/Saragon4005/Discord-Chatbot
+        ```''')
 
     @bot.event
     async def on_ready():
