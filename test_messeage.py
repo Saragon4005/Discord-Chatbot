@@ -27,7 +27,7 @@ class message():  # Simulates a message as seen by the on_message fuction
     channel_id = 660979844179427371
 
     class author():
-        username = "[HU/EN] Saragon"
+        name = "[HU/EN] Saragon"
         id = 212686680052727814
         discriminator = 2988
         avatar = "2175ab2713aa37ee3dfcb4fac5a5586f"
