@@ -44,7 +44,7 @@ try:
         await ctx.message.channel.send("works!")
 
     @bot.command(name="Moirail", help="Shows moirail counter for user",
-                 aliases=["h"])
+                 aliases=["m"])
     async def Moirail(ctx):
         await ctx.message.channel.send(
             f"{ctx.author.name} was platonic "
