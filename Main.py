@@ -4,6 +4,7 @@ import json
 import os
 
 from dotenv import load_dotenv
+import git
 
 import Logger
 from discord.ext import commands
@@ -58,6 +59,12 @@ try:
         Further information can be found on the github:
         https://github.com/Saragon4005/Discord-Chatbot
         ```''')
+
+    @bot.command(name="Git Pull", help="Updates bot from github repository",
+                 aliases=["pull", "update"])
+    async def gitPull(ctx):
+        repo = git.Repo('')
+        repo.remotes.origin.pull()
 
     @bot.event
     async def on_ready():
