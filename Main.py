@@ -66,6 +66,10 @@ try:
         if ctx.author.id == 212686680052727814:
         repo = git.Repo('')
         repo.remotes.origin.pull()
+        else:
+            await ctx.send("You are not allowed to do that")
+            print(f"{ctx.author.id} attemped pull")
+
 
     @bot.event
     async def on_ready():
