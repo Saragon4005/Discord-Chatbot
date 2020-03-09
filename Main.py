@@ -70,7 +70,8 @@ try:
             await ctx.send("You are not allowed to do that")
             print(f"{ctx.author.id} attemped pull")
 
-    @bot.command(name="Owner", help="Checks if you are allowed to do owner operations",
+    @bot.command(name="Owner",
+                 help="Checks if you are allowed to do owner operations",
                  aliases=["sudo", "su", "root"])
     async def owner(ctx):
         if ctx.author.id == 212686680052727814:
