@@ -64,12 +64,19 @@ try:
                  aliases=["pull", "update"])
     async def gitPull(ctx):
         if ctx.author.id == 212686680052727814:
-        repo = git.Repo('')
-        repo.remotes.origin.pull()
+            repo = git.Repo('')
+            repo.remotes.origin.pull()
         else:
             await ctx.send("You are not allowed to do that")
             print(f"{ctx.author.id} attemped pull")
 
+    @bot.command(name="Owner", help="Checks if you are allowed to do owner operations",
+                 aliases=["sudo", "su", "root"])
+    async def owner(ctx):
+        if ctx.author.id == 212686680052727814:
+            await ctx.send("You are owner")
+        else:
+            await ctx.send("You are not owner")
 
     @bot.event
     async def on_ready():
