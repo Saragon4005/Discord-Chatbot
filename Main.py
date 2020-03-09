@@ -4,6 +4,7 @@ import json
 import os
 
 from dotenv import load_dotenv
+import git
 
 import Logger
 from discord.ext import commands
@@ -41,23 +42,42 @@ try:
     @bot.command(name="test", help="Responds with 'works!'")
     async def test(ctx):
         print('test triggered!')
-        await ctx.message.channel.send("works!")
+        await ctx.send("works!")
 
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
     async def Moirail(ctx):
-        await ctx.message.channel.send(
+        await ctx.send(
             f"{ctx.author.name} was platonic "
             f"{MoirailCounter[ctx.author.name]} times")
 
     @bot.command(name="Description", help="Shows basic info about bot",
                  aliases=["info", "desc", "i"])
     async def description(ctx):
-        await ctx.message.channel.send(f'''```{bot.user}:{bot.description}
+        await ctx.send(f'''```{bot.user}:{bot.description}
         You can ask for {bot.command_prefix}help
         Further information can be found on the github:
         https://github.com/Saragon4005/Discord-Chatbot
         ```''')
+
+    @bot.command(name="Git Pull", help="Updates bot from github repository",
+                 aliases=["pull", "update"])
+    async def gitPull(ctx):
+        if ctx.author.id == 212686680052727814:
+            repo = git.Repo('')
+            repo.remotes.origin.pull()
+        else:
+            await ctx.send("You are not allowed to do that")
+            print(f"{ctx.author.id} attemped pull")
+
+    @bot.command(name="Owner",
+                 help="Checks if you are allowed to do owner operations",
+                 aliases=["sudo", "su", "root"])
+    async def owner(ctx):
+        if ctx.author.id == 212686680052727814:
+            await ctx.send("You are owner")
+        else:
+            await ctx.send("You are not owner")
 
     @bot.event
     async def on_ready():
