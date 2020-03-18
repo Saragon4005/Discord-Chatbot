@@ -113,8 +113,6 @@ try:
             print("Could not process commands \n"
                   "This is could be due to bot not being started \n"
                   "This is normal for testing")
-        # if message.content == f"<!@{bot.user.id}>":
-        #    await message.channel.send(f"My prefix is {bot.command_prefix}")
 
     @bot.event
     async def on_error(event, *args, **kwargs):
