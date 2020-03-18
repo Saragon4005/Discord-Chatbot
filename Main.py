@@ -42,7 +42,7 @@ try:
     @bot.command(name="test", help="Responds with 'works!'")
     async def test(ctx):
         print('test triggered!')
-        await ctx.send("works! `1`")
+        await ctx.send("works!")
 
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
