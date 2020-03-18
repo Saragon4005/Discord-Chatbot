@@ -2,6 +2,7 @@
 import atexit
 import json
 import os
+import discord
 
 from dotenv import load_dotenv
 import git
@@ -40,20 +41,20 @@ except FileNotFoundError:
 try:
 
     @bot.command(name="test", help="Responds with 'works!'")
-    async def test(ctx):
+    async def test(ctx: commands.Context):
         print('test triggered!')
         await ctx.send("works!")
 
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
-    async def Moirail(ctx):
+    async def Moirail(ctx: commands.Context):
         await ctx.send(
             f"{ctx.author.name} was platonic "
             f"{MoirailCounter[ctx.author.name]} times")
 
     @bot.command(name="Description", help="Shows basic info about bot",
                  aliases=["info", "desc", "i"])
-    async def description(ctx):
+    async def description(ctx: commands.Context):
         await ctx.send(f'''```{bot.user}:{bot.description}
         You can ask for {bot.command_prefix}help
         Further information can be found on the github:
@@ -62,7 +63,7 @@ try:
 
     @bot.command(name="Git Pull", help="Updates bot from github repository",
                  aliases=["pull", "update"])
-    async def gitPull(ctx):
+    async def gitPull(ctx: commands.Context):
         if ctx.author.id == 212686680052727814:
             repo = git.Repo('')
             repo.remotes.origin.pull()
@@ -73,7 +74,7 @@ try:
     @bot.command(name="Owner",
                  help="Checks if you are allowed to do owner operations",
                  aliases=["sudo", "su", "root"])
-    async def owner(ctx):
+    async def owner(ctx: commands.Context):
         if ctx.author.id == 212686680052727814:
             await ctx.send("You are owner")
         else:
@@ -92,13 +93,13 @@ try:
         print("Connected!")
 
     @bot.event
-    async def on_member_join(member):
+    async def on_member_join(member: discord.Member):
         # set announcements as current channel
         channel = bot.get_channel(660987946085646367)
         await channel.send(f'Welcome {member.name}!')
 
     @bot.event
-    async def on_message(message):
+    async def on_message(message: discord.Message):
         if message.author == bot.user:
             return
         if '<>' in message.content:
