@@ -10,6 +10,8 @@ import git
 import Logger
 from discord.ext import commands
 
+import Database as db
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -46,10 +48,15 @@ try:
 
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
-    async def Moirail(ctx: commands.Context):
+    async def Moirail(ctx: commands.Context, arg):
+        if arg is None:
+            user = ctx.author.id
+        else:
+            user = arg.strip('<!@> ')
+            MoirailV = [0](db.QueryID(user))
         await ctx.send(
-            f"{ctx.author.name} was platonic "
-            f"{MoirailCounter[ctx.author.name]} times")
+            f"""{ctx.message.author.metion} was platonic
+            {MoirailV} times""")
 
     @bot.command(name="Description", help="Shows basic info about bot",
                  aliases=["info", "desc", "i"])
