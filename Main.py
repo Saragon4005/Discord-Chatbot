@@ -120,6 +120,11 @@ try:
                 f.write(f'Unhandled message: {args[0]}\n')
             else:
                 raise
+
+    @bot.event
+    async def on_command_error(ctx, error):
+        await ctx.send(error)
+
 except Exception:  # Saves variables before quitting
     save()
     raise
