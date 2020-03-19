@@ -25,10 +25,9 @@ MoirailCounter = {}
 
 
 def save():
-    # saves variables to a json file
-    with open('Moirail.json', 'w') as fp:
-        print("Attemting save")
-        json.dump(MoirailCounter, fp)
+    # Commits to Database
+    print("Attemting save")
+    db.SQL.commit()
 
 
 try:
@@ -48,15 +47,18 @@ try:
 
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
-    async def Moirail(ctx: commands.Context, arg):
-        if arg is None:
+    async def Moirail(ctx: commands.Context, *arg):
+        if arg == ():  # if no argument is passed go with sender
             user = ctx.author.id
         else:
-            user = arg.strip('<!@> ')
-            MoirailV = [0](db.QueryID(user))
+            user = arg[0].strip('<!@> ')
+        try:
+            MoirailV = (db.QueryID(user))[0]
+        except TypeError:
+            await ctx.send("No record for this user")
+            return
         await ctx.send(
-            f"""{ctx.message.author.metion} was platonic
-            {MoirailV} times""")
+            f"""{bot.get_user(user).mention} was platonic {MoirailV} times""")
 
     @bot.command(name="Description", help="Shows basic info about bot",
                  aliases=["info", "desc", "i"])
@@ -110,9 +112,13 @@ try:
             return
         if '<>' in message.content:
             try:
-                MoirailCounter[message.author.name] += 1
-            except KeyError:
-                MoirailCounter[message.author.name] = 1
+                MoirailV = (db.QueryID(message.author.id))[0] + 1
+                db.update(f"Moirail = {MoirailV}", f"Id = {message.author.id}")
+            except TypeError:
+                db.c.execute(f'''INSERT INTO Users(id, Moirail)
+                                 Values({message.author.id},1)''')
+            finally:
+                db.SQL.commit()
         try:
             await bot.process_commands(message)
         except AttributeError:
@@ -131,6 +137,7 @@ try:
     @bot.event
     async def on_command_error(ctx, error):
         await ctx.send(error)
+        print(error)
 
 except Exception:  # Saves variables before quitting
     save()
