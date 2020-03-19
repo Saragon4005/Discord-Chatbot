@@ -1,6 +1,5 @@
 #!/usr/bin/python3.8
 import atexit
-import json
 import os
 import discord
 
@@ -21,7 +20,12 @@ Logger.start()
 bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
                    case_insensitive=True)
 
-MoirailCounter = {}
+
+def isOwner(id):
+    if id == 212686680052727814:
+        return(True)
+    else:
+        return(False)
 
 
 def save():
@@ -29,14 +33,6 @@ def save():
     print("Attemting save")
     db.SQL.commit()
 
-
-try:
-    with open('Moirail.json', 'r') as fp:
-        MoirailCounter = json.load(fp)
-except json.decoder.JSONDecodeError:
-    print("JSON failed to read the data might be corrupted")
-except FileNotFoundError:
-    print("No JSON saves found")
 
 try:
 
@@ -51,14 +47,13 @@ try:
         if arg == ():  # if no argument is passed go with sender
             user = ctx.author.id
         else:
-            user = arg[0].strip('<!@> ')
+            user = arg[0].strip('<!@> ')  # remove metion parts
         try:
             MoirailV = (db.QueryID(user))[0]
+            await ctx.send(f"{bot.get_user(user).mention} "
+                           f"was platonic {MoirailV} times")
         except TypeError:
             await ctx.send("No record for this user")
-            return
-        await ctx.send(
-            f"""{bot.get_user(user).mention} was platonic {MoirailV} times""")
 
     @bot.command(name="Description", help="Shows basic info about bot",
                  aliases=["info", "desc", "i"])
@@ -72,7 +67,7 @@ try:
     @bot.command(name="Git Pull", help="Updates bot from github repository",
                  aliases=["pull", "update"])
     async def gitPull(ctx: commands.Context):
-        if ctx.author.id == 212686680052727814:
+        if isOwner(ctx.author.id):
             repo = git.Repo('')
             repo.remotes.origin.pull()
         else:
@@ -83,7 +78,7 @@ try:
                  help="Checks if you are allowed to do owner operations",
                  aliases=["sudo", "su", "root"])
     async def owner(ctx: commands.Context):
-        if ctx.author.id == 212686680052727814:
+        if isOwner(ctx.author.id):
             await ctx.send("You are owner")
         else:
             await ctx.send("You are not owner")
