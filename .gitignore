@@ -133,3 +133,4 @@ dmypy.json
 
 #presistence
 Moirail.json
+users.db
