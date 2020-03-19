@@ -21,10 +21,9 @@ bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
 
 MoirailCounter = {}
 
-# saves variables to a json file
-
 
 def save():
+    # saves variables to a json file
     with open('Moirail.json', 'w') as fp:
         print("Attemting save")
         json.dump(MoirailCounter, fp)
