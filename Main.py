@@ -50,7 +50,7 @@ try:
             user = arg[0].strip('<!@> ')  # remove metion parts
         try:
             MoirailV = (db.QueryID(user))[0]
-            await ctx.send(f"{bot.get_user(user).mention} "
+            await ctx.send(f"{bot.get_user(int(user)).mention} "
                            f"was platonic {MoirailV} times")
         except TypeError:
             await ctx.send("No record for this user")
