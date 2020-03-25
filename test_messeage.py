@@ -19,7 +19,7 @@ class message():  # Simulates a message as seen by the on_message fuction
         joined_at = "2019-12-29T22:57:55.267000+00:00"
         hoisted_role = 660986670883274803
         deaf = False
-    id = 664639523833249802
+    id = 1234
     flags = 0
     embeds = []
     edited_timestamp = None
@@ -28,7 +28,7 @@ class message():  # Simulates a message as seen by the on_message fuction
 
     class author():
         name = "[HU/EN] Saragon"
-        id = 212686680052727814
+        id = 1234
         discriminator = 2988
         avatar = "2175ab2713aa37ee3dfcb4fac5a5586f"
     attachments = []
@@ -61,6 +61,6 @@ def custom_message(custom):
 
 
 async def test_moirail():
-    Main.MoirailCounter = {}
+    MoirailV = (Main.db.QueryID(1234))[0]
     await Main.on_message(custom_message("<>"))
-    assert Main.MoirailCounter == {'[HU/EN] Saragon': 1}
+    assert (Main.db.QueryID(1234))[0] == MoirailV + 1
