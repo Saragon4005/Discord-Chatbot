@@ -28,6 +28,14 @@ def isOwner(id):
         return(False)
 
 
+def supression(m):
+    global suppress
+    suppress = ["693964315790934098", "clo9d"]
+    for i in suppress:
+        if m in i:
+            return(True)
+
+
 def save():
     # Commits to Database
     print("Attemting save")
@@ -114,6 +122,8 @@ try:
                                  Values({message.author.id},1)''')
             finally:
                 db.SQL.commit()
+        if supression(message.content):
+            await message.delete()
         try:
             await bot.process_commands(message)
         except AttributeError:
