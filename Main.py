@@ -29,7 +29,6 @@ def isOwner(id):
 
 
 def supression(m):
-    global suppress
     suppress = ["693964315790934098", "clo9d"]
     for i in suppress:
         if m in i:
@@ -113,9 +112,6 @@ try:
     async def on_message(message: discord.Message):
         if message.author == bot.user:
             return
-        db.update(f"LastMessage = {str(message.created_at())}",
-                  f"Id={message.author.id}")
-
         if '<>' in message.content:
             try:
                 MoirailV = (db.QueryID(message.author.id))[0] + 1
@@ -133,6 +129,8 @@ try:
             print("Could not process commands \n"
                   "This is could be due to bot not being started \n"
                   "This is normal for testing")
+        db.update(f"LastMessage = {str(message.created_at())}",
+                  f"Id={message.author.id}")
 
     @bot.event
     async def on_error(event, *args, **kwargs):
