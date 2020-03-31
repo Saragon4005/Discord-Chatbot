@@ -7,7 +7,8 @@ c = SQL.cursor()
 def CreateDB():
     c.execute(
         'CREATE TABLE IF NOT EXISTS Users'
-        '(id int NOT NULL PRIMARY KEY, Moirail int)')
+        '(id int NOT NULL PRIMARY KEY, Moirail int,'
+        ' Seen TIMESTAMP, LastMessage, TIMESTAMP)')
 
 
 def QueryID(condition):

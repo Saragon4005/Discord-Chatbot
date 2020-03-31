@@ -113,6 +113,9 @@ try:
     async def on_message(message: discord.Message):
         if message.author == bot.user:
             return
+        db.update(f"LastMessage = {str(message.created_at())}",
+                  f"Id={message.author.id}")
+
         if '<>' in message.content:
             try:
                 MoirailV = (db.QueryID(message.author.id))[0] + 1
