@@ -9,11 +9,24 @@ def CreateDB():
         'CREATE TABLE IF NOT EXISTS Users'
         '(id int NOT NULL PRIMARY KEY, Moirail int,'
         ' Seen TIMESTAMP, LastMessage, TIMESTAMP)')
+    c.execute('CREATE TABLE IF NOT EXISTS Settings'
+              '(Name TEXT NOT NULL PRIMARY KEY, Value TEXT)')
 
 
 def QueryID(condition):
-    id = [condition]
-    c.execute(''' SELECT Moirail FROM Users WHERE id = ? ''', id)
+    return(QueryModular(condition, "moirail"))
+
+
+def QuerySetting(condition):
+    return(QueryModular(condition, "setting"))
+
+
+def QueryModular(condition, s):
+    selection = [condition]
+    if s == "moirail":
+        c.execute('SELECT Moirail FROM Users WHERE id = ?', selection)
+    elif s == "setting":
+        c.execute('SELECT Value FROM Settings WHERE Name = ?', selection)
     return(c.fetchone())
 
 
