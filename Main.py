@@ -35,6 +35,10 @@ def supression(m):
             return(True)
 
 
+def updateSettings():  # TODO
+    pass
+
+
 def save():
     # Commits to Database
     print("Attemting save")
