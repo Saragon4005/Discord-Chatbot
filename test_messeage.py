@@ -1,10 +1,10 @@
 import Main
 
 
-class message():  # Simulates a message as seen by the on_message fuction
+class message():  # Simulates a message as seen by the on_message function
     type = 0
     tts = False
-    timestamp = '2020-01-09T01:20:10.887000+00:00'
+    created_at = '2020-01-09T01:20:10.887000+00:00'
     pinned = False
     nonce = 664639515201110016
     mentions = []

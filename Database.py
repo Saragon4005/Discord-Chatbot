@@ -7,8 +7,9 @@ c = SQL.cursor()
 def CreateDB():
     c.execute(
         'CREATE TABLE IF NOT EXISTS Users'
-        '(id int NOT NULL PRIMARY KEY, Moirail int,'
-        ' Seen TIMESTAMP, LastMessage, TIMESTAMP)')
+        '(id int NOT NULL PRIMARY KEY, Moirail int DEFAULT 0,'
+        ' Seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
+        ' LastMessage TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
     c.execute('CREATE TABLE IF NOT EXISTS Settings'
               '(Name TEXT NOT NULL PRIMARY KEY, Value TEXT)')
 
@@ -21,20 +22,20 @@ def QuerySetting(condition):
     return(QueryModular(condition, "setting"))
 
 
-def QueryModular(condition, s):
-    selection = [condition]
-    if s == "moirail":
+def QueryModular(condition, m):
+    selection = [condition]  # too scared to remove this
+    if m == "moirail":
         c.execute('SELECT Moirail FROM Users WHERE id = ?', selection)
-    elif s == "setting":
+    elif m == "setting":
         c.execute('SELECT Value FROM Settings WHERE Name = ?', selection)
     return(c.fetchone())
 
 
-def update(Set: str, Condition: str):
+def update(Set: str, Condition: str, Table: str = "Users"):
     # This should not be exposed to the user
-    c.execute(f'''UPDATE Users
-                 Set {Set}
-                 Where {Condition}''')
+    c.execute(f'''UPDATE {Table}
+                  Set {Set}
+                  Where {Condition}''')
 
 
 CreateDB()
