@@ -10,6 +10,7 @@ import Logger
 from discord.ext import commands
 
 import Database as db
+from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -117,6 +118,18 @@ try:
         await channel.send(f'Welcome {member.name}!')
 
     @bot.event
+    async def on_member_update(before, after: discord.Member):
+        db.update(f"Seen = {datetime.timestamp(datetime.now())}",
+                  f"Id={after.id}")
+        try:  # this creates a log for the user even if it didn't exist before
+            db.QueryID(after.id)
+        except TypeError:
+            db.c.execute(f'''INSERT INTO Users(id)
+                            Values({after.id})''')
+        finally:
+            db.SQL.commit()
+
+    @bot.event
     async def on_message(message: discord.Message):
         if message.author == bot.user:
             return
@@ -144,6 +157,8 @@ try:
         except TypeError:
             db.c.execute(f'''INSERT INTO Users(id)
                              Values({message.author.id})''')
+        finally:
+            db.SQL.commit()
 
     @bot.event
     async def on_error(event, *args, **kwargs):

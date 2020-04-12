@@ -8,8 +8,8 @@ def CreateDB():
     c.execute(
         'CREATE TABLE IF NOT EXISTS Users'
         '(id int NOT NULL PRIMARY KEY, Moirail int DEFAULT 0,'
-        ' Seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
-        ' LastMessage TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
+        ' Seen TEXT DEFAULT 0,'
+        ' LastMessage TEXT DEFAULT 0)')
     c.execute('CREATE TABLE IF NOT EXISTS Settings'
               '(Name TEXT NOT NULL PRIMARY KEY, Value TEXT)')
 
