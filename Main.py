@@ -21,6 +21,13 @@ bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
                    case_insensitive=True)
 
 
+def updateSettings():  # TODO
+    pass
+
+
+updateSettings()
+
+
 def isOwner(id):
     if id == 212686680052727814:
         return(True)
@@ -33,10 +40,7 @@ def supression(m):
     for i in suppress:
         if m in i:
             return(True)
-
-
-def updateSettings():  # TODO
-    pass
+    return(False)
 
 
 def save():
@@ -133,8 +137,13 @@ try:
             print("Could not process commands \n"
                   "This is could be due to bot not being started \n"
                   "This is normal for testing")
-        db.update(f"LastMessage = {str(message.created_at())}",
+        db.update(f"LastMessage = {message.created_at.timestamp()}",
                   f"Id={message.author.id}")
+        try:  # this creates a log for the user even if it didn't exist before
+            db.QueryID(message.author.id)
+        except TypeError:
+            db.c.execute(f'''INSERT INTO Users(id)
+                             Values({message.author.id})''')
 
     @bot.event
     async def on_error(event, *args, **kwargs):
