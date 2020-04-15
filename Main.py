@@ -12,6 +12,8 @@ from discord.ext import commands
 import Database as db
 from datetime import datetime, timedelta, timezone
 
+from distutils.util import strtobool
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -22,8 +24,11 @@ bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
                    case_insensitive=True)
 
 
-def updateSettings():  # TODO
-    pass
+def updateSettings():
+    global blacklistToggle
+    global blacklist
+    blacklistToggle = strtobool(db.QuerySetting('BlacklistToggle')[0])
+    blacklist = db.QuerySetting('Blacklist')[0].split(',')
 
 
 updateSettings()
@@ -37,10 +42,12 @@ def isOwner(id):
 
 
 def supression(m):
-    suppress = ["693964315790934098", "clo9d"]
-    for i in suppress:
-        if m in i:
-            return(True)
+    global blacklistToggle
+    if(blacklistToggle):
+        global blacklist
+        for i in blacklist:
+            if m in i:
+                return(True)
     return(False)
 
 

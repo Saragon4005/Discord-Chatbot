@@ -28,7 +28,7 @@ def QuerySetting(condition):
     """
     Outputs the value for the specified setting
     """
-    return(QueryModular(condition).setting()())
+    return(QueryModular(condition).setting())
 
 
 def QueryUser(condition):
