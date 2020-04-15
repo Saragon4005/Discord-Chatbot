@@ -103,6 +103,20 @@ try:
         else:
             await ctx.send("You are not owner")
 
+    @bot.command(name="Stats")
+    async def stats(ctx: commands.Context, *arg):
+        Timezone = timezone(timedelta(hours=-7))
+        user = getUser(ctx, *arg)
+        info = [int(round(float(i))) for i in db.QueryUser(user)]
+        seenTZ = datetime.fromtimestamp(info[1]).astimezone(Timezone)
+        lastMesseageTZ = datetime.fromtimestamp(info[2]).astimezone(Timezone)
+        seen = seenTZ.strftime("%m/%d/%Y, %H:%M:%S")
+        lastMesseage = lastMesseageTZ.strftime("%m/%d/%Y, %H:%M:%S")
+
+        await ctx.send(f'{bot.get_user(int(user)).mention} '
+                       f'was last seen on {seen} '
+                       f'Their last messeage was sent on {lastMesseage}')
+
     @bot.event
     async def on_ready():
         print(
