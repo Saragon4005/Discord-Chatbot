@@ -1,6 +1,4 @@
 from Database import c, SQL
-# from subprocess import call
-# call()
 
 c.executescript("""
 BEGIN TRANSACTION;
@@ -16,6 +14,11 @@ INSERT INTO Users (id, Moirail)
 SELECT id, Moirail
 FROM _Users_old;
 COMMIT;""")
+
+c.execute("INSERT INTO Settings (Name, Value)"
+          "Values('Blacklist', '693964315790934098,clo9d')")
+c.execute("INSERT INTO Settings (Name, Value)"
+          "Values('BlacklistToggle', 'False')")
 
 
 SQL.commit()
