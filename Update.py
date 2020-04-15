@@ -1,9 +1,13 @@
 from Database import c, SQL
 import sqlite3
 
+try:
+    c.execute("DROP TABLE _Users_old")
+except Exception:
+    pass
+
 c.executescript("""
 BEGIN TRANSACTION;
-DROP TABLE _Users_old;
 ALTER TABLE Users RENAME TO _Users_old;
 
 CREATE TABLE Users
