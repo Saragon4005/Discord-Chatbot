@@ -103,8 +103,10 @@ try:
         else:
             await ctx.send("You are not owner")
 
-    @bot.command(name="Stats")
+    @bot.command(name="Stats", help="Gives statistics about the User",
+                 aliases=["stat", "s", "user"])
     async def stats(ctx: commands.Context, *arg):
+        # TODO make this respond to the invokers timezone
         Timezone = timezone(timedelta(hours=-7))
         user = getUser(ctx, *arg)
         info = [int(round(float(i))) for i in db.QueryUser(user)]
