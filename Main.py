@@ -10,7 +10,7 @@ import Logger
 from discord.ext import commands
 
 import Database as db
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -44,6 +44,13 @@ def supression(m):
     return(False)
 
 
+def getUser(ctx, *arg):
+    if arg == ():  # if no argument is passed go with sender
+        return(ctx.author.id)
+    else:
+        return(arg[0].strip('<!@> '))  # remove metion parts
+
+
 def save():
     # Commits to Database
     print("Attemting save")
@@ -60,12 +67,9 @@ try:
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
     async def Moirail(ctx: commands.Context, *arg):
-        if arg == ():  # if no argument is passed go with sender
-            user = ctx.author.id
-        else:
-            user = arg[0].strip('<!@> ')  # remove metion parts
+        user = getUser(ctx, *arg)
         try:
-            MoirailV = (db.QueryID(user))[0]
+            MoirailV = (db.QueryMoirail(user))[0]
             await ctx.send(f"{bot.get_user(int(user)).mention} "
                            f"was platonic {MoirailV} times")
         except TypeError:
@@ -122,7 +126,7 @@ try:
         db.update(f"Seen = {datetime.timestamp(datetime.now())}",
                   f"Id={after.id}")
         try:  # this creates a log for the user even if it didn't exist before
-            db.QueryID(after.id)
+            db.QueryMoirail(after.id)
         except TypeError:
             db.c.execute(f'''INSERT INTO Users(id)
                             Values({after.id})''')
@@ -135,7 +139,7 @@ try:
             return
         if '<>' in message.content:
             try:
-                MoirailV = (db.QueryID(message.author.id))[0] + 1
+                MoirailV = (db.QueryMoirail(message.author.id))[0] + 1
                 db.update(f"Moirail = {MoirailV}", f"Id = {message.author.id}")
             except TypeError:
                 db.c.execute(f'''INSERT INTO Users(id, Moirail)
@@ -153,7 +157,7 @@ try:
         db.update(f"LastMessage = {message.created_at.timestamp()}",
                   f"Id={message.author.id}")
         try:  # this creates a log for the user even if it didn't exist before
-            db.QueryID(message.author.id)
+            db.QueryMoirail(message.author.id)
         except TypeError:
             db.c.execute(f'''INSERT INTO Users(id)
                              Values({message.author.id})''')

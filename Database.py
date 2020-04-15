@@ -14,21 +14,38 @@ def CreateDB():
               '(Name TEXT NOT NULL PRIMARY KEY, Value TEXT)')
 
 
-def QueryID(condition):
-    return(QueryModular(condition, "moirail"))
+def QueryMoirail(condition):
+    return(QueryModular(condition).moirail())
 
 
 def QuerySetting(condition):
-    return(QueryModular(condition, "setting"))
+    return(QueryModular(condition).setting()())
 
 
-def QueryModular(condition, m):
-    selection = [condition]  # too scared to remove this
-    if m == "moirail":
-        c.execute('SELECT Moirail FROM Users WHERE id = ?', selection)
-    elif m == "setting":
-        c.execute('SELECT Value FROM Settings WHERE Name = ?', selection)
-    return(c.fetchone())
+def QueryUser(condition):
+    """
+    Outputs a list for the user in Moirail, Seen, LastMessage order
+    """
+    return(QueryModular(condition).user())
+
+
+class QueryModular():
+
+    def __init__(self, condition):
+        self.selection = [condition]  # too scared to remove this
+
+    def moirail(self):
+        c.execute('SELECT Moirail FROM Users WHERE id = ?', self.selection)
+        return(c.fetchone())
+
+    def setting(self):
+        c.execute('SELECT Value FROM Settings WHERE Name = ?', self.selection)
+        return(c.fetchone())
+
+    def user(self):
+        c.execute('SELECT Moirail, Seen, LastMessage '
+                  'FROM Users WHERE id = ?', self.selection)
+        return(c.fetchone())
 
 
 def update(Set: str, Condition: str, Table: str = "Users"):

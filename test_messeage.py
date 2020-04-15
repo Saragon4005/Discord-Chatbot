@@ -61,6 +61,6 @@ def custom_message(custom):
 
 
 async def test_moirail():
-    MoirailV = (Main.db.QueryID(1234))[0]
+    MoirailV = (Main.db.QueryMoirail(1234))[0]
     await Main.on_message(custom_message("<>"))
-    assert (Main.db.QueryID(1234))[0] == MoirailV + 1
+    assert (Main.db.QueryMoirail(1234))[0] == MoirailV + 1
