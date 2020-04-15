@@ -1,10 +1,10 @@
 import Main
 
 
-class message():  # Simulates a message as seen by the on_message fuction
+class message():  # Simulates a message as seen by the on_message function
     type = 0
     tts = False
-    timestamp = '2020-01-09T01:20:10.887000+00:00'
+    created_at = '2020-01-09T01:20:10.887000+00:00'
     pinned = False
     nonce = 664639515201110016
     mentions = []
@@ -61,6 +61,6 @@ def custom_message(custom):
 
 
 async def test_moirail():
-    MoirailV = (Main.db.QueryID(1234))[0]
+    MoirailV = (Main.db.QueryMoirail(1234))[0]
     await Main.on_message(custom_message("<>"))
-    assert (Main.db.QueryID(1234))[0] == MoirailV + 1
+    assert (Main.db.QueryMoirail(1234))[0] == MoirailV + 1

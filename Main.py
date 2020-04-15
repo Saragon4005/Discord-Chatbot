@@ -10,6 +10,9 @@ import Logger
 from discord.ext import commands
 
 import Database as db
+from datetime import datetime, timedelta, timezone
+
+from distutils.util import strtobool
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -21,6 +24,16 @@ bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
                    case_insensitive=True)
 
 
+def updateSettings():
+    global blacklistToggle
+    global blacklist
+    blacklistToggle = strtobool(db.QuerySetting('BlacklistToggle')[0])
+    blacklist = db.QuerySetting('Blacklist')[0].split(',')
+
+
+updateSettings()
+
+
 def isOwner(id):
     if id == 212686680052727814:
         return(True)
@@ -29,11 +42,20 @@ def isOwner(id):
 
 
 def supression(m):
-    global suppress
-    suppress = ["693964315790934098", "clo9d"]
-    for i in suppress:
-        if m in i:
-            return(True)
+    global blacklistToggle
+    if(blacklistToggle):
+        global blacklist
+        for i in blacklist:
+            if m in i:
+                return(True)
+    return(False)
+
+
+def getUser(ctx, *arg):
+    if arg == ():  # if no argument is passed go with sender
+        return(ctx.author.id)
+    else:
+        return(arg[0].strip('<!@> '))  # remove metion parts
 
 
 def save():
@@ -52,12 +74,9 @@ try:
     @bot.command(name="Moirail", help="Shows moirail counter for user",
                  aliases=["m"])
     async def Moirail(ctx: commands.Context, *arg):
-        if arg == ():  # if no argument is passed go with sender
-            user = ctx.author.id
-        else:
-            user = arg[0].strip('<!@> ')  # remove metion parts
+        user = getUser(ctx, *arg)
         try:
-            MoirailV = (db.QueryID(user))[0]
+            MoirailV = (db.QueryMoirail(user))[0]
             await ctx.send(f"{bot.get_user(int(user)).mention} "
                            f"was platonic {MoirailV} times")
         except TypeError:
@@ -91,6 +110,52 @@ try:
         else:
             await ctx.send("You are not owner")
 
+    @bot.command(name="Stats", help="Gives statistics about the User",
+                 aliases=["stat", "s", "user"])
+    async def stats(ctx: commands.Context, *arg):
+        # TODO make this respond to the invokers timezone
+        Timezone = timezone(timedelta(hours=-7))
+        user = getUser(ctx, *arg)
+        info = [int(round(float(i))) for i in db.QueryUser(user)]
+        seenTZ = datetime.fromtimestamp(info[1]).astimezone(Timezone)
+        lastMesseageTZ = datetime.fromtimestamp(info[2]).astimezone(Timezone)
+        seen = seenTZ.strftime("%m/%d/%Y, %H:%M:%S")
+        lastMesseage = lastMesseageTZ.strftime("%m/%d/%Y, %H:%M:%S")
+
+        await ctx.send(f'{bot.get_user(int(user)).mention} '
+                       f'was last seen on {seen} '
+                       f'Their last messeage was sent on {lastMesseage}')
+
+    @bot.command(name="ToggleBlacklist", help="Toggles the blacklist",
+                 aliases=["blacklist"])
+    async def blacklistCommand(ctx: commands.Context):
+        if isOwner(ctx.author.id):
+            global blacklistToggle
+            if(blacklistToggle):
+                v = "false"
+            else:
+                v = "true"
+            db.update(f"Value = {v}", "Name='BlacklistToggle'", "Settings")
+            updateSettings()
+            await ctx.send(f"Blacklist set to '{blacklistToggle}'")
+        else:
+            await ctx.send("Only the owner is allowed to do this")
+
+    @bot.command(name="SetBlacklist", help="Sets blacklist's value",
+                 aliases=["set", "block"])
+    async def SetBlacklist(ctx: commands.Context, *args):
+        if isOwner(ctx.author.id):
+            if args:
+                v = ",".join(args)
+                db.update(f"Value = '{v}'", "Name='Blacklist'", "Settings")
+                updateSettings()
+                await ctx.send(f"Blacklist set to '{blacklist}'")
+            else:
+                updateSettings()
+                await ctx.send(f"Blacklist is '{blacklist}'")
+        else:
+            await ctx.send("Only the owner is allowed to do this")
+
     @bot.event
     async def on_ready():
         print(
@@ -110,12 +175,24 @@ try:
         await channel.send(f'Welcome {member.name}!')
 
     @bot.event
+    async def on_member_update(before, after: discord.Member):
+        db.update(f"Seen = {datetime.timestamp(datetime.now())}",
+                  f"Id={after.id}")
+        try:  # this creates a log for the user even if it didn't exist before
+            db.QueryMoirail(after.id)
+        except TypeError:
+            db.c.execute(f'''INSERT INTO Users(id)
+                            Values({after.id})''')
+        finally:
+            db.SQL.commit()
+
+    @bot.event
     async def on_message(message: discord.Message):
         if message.author == bot.user:
             return
         if '<>' in message.content:
             try:
-                MoirailV = (db.QueryID(message.author.id))[0] + 1
+                MoirailV = (db.QueryMoirail(message.author.id))[0] + 1
                 db.update(f"Moirail = {MoirailV}", f"Id = {message.author.id}")
             except TypeError:
                 db.c.execute(f'''INSERT INTO Users(id, Moirail)
@@ -130,6 +207,15 @@ try:
             print("Could not process commands \n"
                   "This is could be due to bot not being started \n"
                   "This is normal for testing")
+        db.update(f"LastMessage = {message.created_at.timestamp()}",
+                  f"Id={message.author.id}")
+        try:  # this creates a log for the user even if it didn't exist before
+            db.QueryMoirail(message.author.id)
+        except TypeError:
+            db.c.execute(f'''INSERT INTO Users(id)
+                             Values({message.author.id})''')
+        finally:
+            db.SQL.commit()
 
     @bot.event
     async def on_error(event, *args, **kwargs):
