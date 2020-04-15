@@ -60,8 +60,9 @@ class QueryModular():
 def update(Set: str, Condition: str, Table: str = "Users"):
     # This should not be exposed to the user
     c.execute(f'''UPDATE {Table}
-                  Set {Set}
-                  Where {Condition}''')
+                  SET {Set}
+                  WHERE {Condition}''')
+    SQL.commit()
 
 
 CreateDB()

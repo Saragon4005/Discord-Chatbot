@@ -126,6 +126,36 @@ try:
                        f'was last seen on {seen} '
                        f'Their last messeage was sent on {lastMesseage}')
 
+    @bot.command(name="ToggleBlacklist", help="Toggles the blacklist",
+                 aliases=["blacklist"])
+    async def blacklistCommand(ctx: commands.Context):
+        if isOwner(ctx.author.id):
+            global blacklistToggle
+            if(blacklistToggle):
+                v = "false"
+            else:
+                v = "true"
+            db.update(f"Value = {v}", "Name='BlacklistToggle'", "Settings")
+            updateSettings()
+            await ctx.send(f"Blacklist set to '{blacklistToggle}'")
+        else:
+            await ctx.send("Only the owner is allowed to do this")
+
+    @bot.command(name="SetBlacklist", help="Sets blacklist's value",
+                 aliases=["set", "block"])
+    async def SetBlacklist(ctx: commands.Context, *args):
+        if isOwner(ctx.author.id):
+            if args:
+                v = ",".join(args)
+                db.update(f"Value = '{v}'", "Name='Blacklist'", "Settings")
+                updateSettings()
+                await ctx.send(f"Blacklist set to '{blacklist}'")
+            else:
+                updateSettings()
+                await ctx.send(f"Blacklist is '{blacklist}'")
+        else:
+            await ctx.send("Only the owner is allowed to do this")
+
     @bot.event
     async def on_ready():
         print(

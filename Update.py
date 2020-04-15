@@ -1,4 +1,5 @@
 from Database import c, SQL
+import sqlite3
 
 c.executescript("""
 BEGIN TRANSACTION;
@@ -14,11 +15,15 @@ INSERT INTO Users (id, Moirail)
 SELECT id, Moirail
 FROM _Users_old;
 COMMIT;""")
-
-c.execute("INSERT INTO Settings (Name, Value)"
-          "Values('Blacklist', '693964315790934098,clo9d')")
-c.execute("INSERT INTO Settings (Name, Value)"
-          "Values('BlacklistToggle', 'False')")
-
+try:
+    c.execute("INSERT INTO Settings (Name, Value)"
+              "Values('Blacklist', '693964315790934098,clo9d')")
+except sqlite3.IntegrityError:
+    print("Integrity Error")
+try:
+    c.execute("INSERT INTO Settings (Name, Value)"
+              "Values('BlacklistToggle', 'False')")
+except sqlite3.IntegrityError:
+    print("Integrity Error")
 
 SQL.commit()
