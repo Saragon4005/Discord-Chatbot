@@ -5,6 +5,9 @@ c = SQL.cursor()
 
 
 def CreateDB():
+    '''
+    Creates User and Setting databases
+    '''
     c.execute(
         'CREATE TABLE IF NOT EXISTS Users'
         '(id int NOT NULL PRIMARY KEY, Moirail int DEFAULT 0,'
@@ -15,10 +18,16 @@ def CreateDB():
 
 
 def QueryMoirail(condition):
+    """
+    Outputs the Moirail value for the specified user
+    """
     return(QueryModular(condition).moirail())
 
 
 def QuerySetting(condition):
+    """
+    Outputs the value for the specified setting
+    """
     return(QueryModular(condition).setting()())
 
 
