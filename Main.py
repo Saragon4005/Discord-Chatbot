@@ -179,7 +179,7 @@ try:
         db.update(f"Seen = {datetime.timestamp(datetime.now())}",
                   f"Id={after.id}")
         try:  # this creates a log for the user even if it didn't exist before
-            db.QueryMoirail(after.id)
+            db.QueryMoirail(after.id)[0]
         except TypeError:
             db.c.execute(f'''INSERT INTO Users(id)
                             Values({after.id})''')
@@ -210,7 +210,7 @@ try:
         db.update(f"LastMessage = {message.created_at.timestamp()}",
                   f"Id={message.author.id}")
         try:  # this creates a log for the user even if it didn't exist before
-            db.QueryMoirail(message.author.id)
+            db.QueryMoirail(message.author.id)[0]
         except TypeError:
             db.c.execute(f'''INSERT INTO Users(id)
                              Values({message.author.id})''')
