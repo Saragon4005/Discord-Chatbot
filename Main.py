@@ -10,7 +10,7 @@ import Logger
 from discord.ext import commands
 
 import Database as db
-from datetime import datetime, timedelta, timezone
+import pendulum
 
 from distutils.util import strtobool
 
@@ -52,6 +52,9 @@ def supression(m):
 
 
 def getUser(ctx, *arg):
+    """
+    returns a user id from either the arguments or if None is passed the sender
+    """
     if arg == ():  # if no argument is passed go with sender
         return(ctx.author.id)
     else:
@@ -114,13 +117,13 @@ try:
                  aliases=["stat", "s", "user"])
     async def stats(ctx: commands.Context, *arg):
         # TODO make this respond to the invokers timezone
-        Timezone = timezone(timedelta(hours=-7))
+        Timezone = "America/Los_Angeles"
         user = getUser(ctx, *arg)
         info = [int(round(float(i))) for i in db.QueryUser(user)]
-        seenTZ = datetime.fromtimestamp(info[1]).astimezone(Timezone)
-        lastMesseageTZ = datetime.fromtimestamp(info[2]).astimezone(Timezone)
-        seen = seenTZ.strftime("%m/%d/%Y, %H:%M:%S")
-        lastMesseage = lastMesseageTZ.strftime("%m/%d/%Y, %H:%M:%S")
+        seenTZ = pendulum.from_timestamp(info[1], Timezone)
+        lastMesseageTZ = pendulum.from_timestamp(info[2], Timezone)
+        seen = seenTZ.to_datetime_string()
+        lastMesseage = lastMesseageTZ.to_datetime_string()
 
         await ctx.send(f'{bot.get_user(int(user)).mention} '
                        f'was last seen on {seen} '
@@ -176,7 +179,7 @@ try:
 
     @bot.event
     async def on_member_update(before, after: discord.Member):
-        db.update(f"Seen = {datetime.timestamp(datetime.now())}",
+        db.update(f"Seen = {pendulum.now(tz='UTC').timestamp()}",
                   f"Id={after.id}")
         try:  # this creates a log for the user even if it didn't exist before
             db.QueryMoirail(after.id)[0]
@@ -207,7 +210,7 @@ try:
             print("Could not process commands \n"
                   "This is could be due to bot not being started \n"
                   "This is normal for testing")
-        db.update(f"LastMessage = {message.created_at.timestamp()}",
+        db.update(f"LastMessage = {pendulum.now(tz='UTC').timestamp()}",
                   f"Id={message.author.id}")
         try:  # this creates a log for the user even if it didn't exist before
             db.QueryMoirail(message.author.id)[0]
