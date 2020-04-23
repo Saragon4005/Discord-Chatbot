@@ -138,7 +138,7 @@ try:
                 v = "false"
             else:
                 v = "true"
-            db.update(f"Value = {v}", "Name='BlacklistToggle'", "Settings")
+            db.update(f"Value = '{v}'", "Name='BlacklistToggle'", "Settings")
             updateSettings()
             await ctx.send(f"Blacklist set to '{blacklistToggle}'")
         else:
