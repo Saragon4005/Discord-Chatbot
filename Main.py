@@ -121,13 +121,13 @@ try:
         user = getUser(ctx, *arg)
         info = [int(round(float(i))) for i in db.QueryUser(user)]
         seenTZ = pendulum.from_timestamp(info[1], Timezone)
-        lastMesseageTZ = pendulum.from_timestamp(info[2], Timezone)
+        lastMessageTZ = pendulum.from_timestamp(info[2], Timezone)
         seen = seenTZ.to_datetime_string()
-        lastMesseage = lastMesseageTZ.to_datetime_string()
+        lastMessage = lastMessageTZ.to_datetime_string()
 
         await ctx.send(f'{bot.get_user(int(user)).mention} '
                        f'was last seen on {seen} '
-                       f'Their last messeage was sent on {lastMesseage}')
+                       f'Their last message was sent on {lastMessage}')
 
     @bot.command(name="ToggleBlacklist", help="Toggles the blacklist",
                  aliases=["blacklist"])
