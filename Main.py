@@ -120,6 +120,7 @@ try:
         Timezone = "America/Los_Angeles"
         user = getUser(ctx, *arg)
         info = [int(round(float(i))) for i in db.QueryUser(user)]
+        # this is needed to convert a string with decimals into an int
         seenTZ = pendulum.from_timestamp(info[1], Timezone)
         lastMessageTZ = pendulum.from_timestamp(info[2], Timezone)
         seen = seenTZ.to_datetime_string()
@@ -173,9 +174,11 @@ try:
 
     @bot.event
     async def on_member_join(member: discord.Member):
-        # set announcements as current channel
-        channel = bot.get_channel(660987946085646367)
-        await channel.send(f'Welcome {member.name}!')
+        # only work in the test guild
+        if(member.guild.id == 660979844179427368):
+            # set announcements as current channel
+            channel = bot.get_channel(660987946085646367)
+            await channel.send(f'Welcome {member.name}!')
 
     @bot.event
     async def on_member_update(before, after: discord.Member):
