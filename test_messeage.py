@@ -1,66 +1,36 @@
 import Main
+import discord.ext.test as dpytest
+import pytest
+
+"""
+TODO https://pypi.org/project/dpytest/ this could possibly be used
+Its A bit messy, but works better than whatever I have right now
+"""
+
+bot = Main.bot
+dpytest.configure(bot)
 
 
-class message():  # Simulates a message as seen by the on_message function
-    type = 0
-    tts = False
-    created_at = '2020-01-09T01:20:10.887000+00:00'
-    pinned = False
-    nonce = 664639515201110016
-    mentions = []
-    mention_roles = []
-    mention_everyone = False
-
-    class member():
-        roles = [660986670883274803]
-        premium_since = None
-        nick = None
-        mute = False
-        joined_at = "2019-12-29T22:57:55.267000+00:00"
-        hoisted_role = 660986670883274803
-        deaf = False
-    id = 1234
-    flags = 0
-    embeds = []
-    edited_timestamp = None
-    content = "messeage"
-    channel_id = 660979844179427371
-
-    class author():
-        name = "[HU/EN] Saragon"
-        id = 1234
-        discriminator = 2988
-        avatar = "2175ab2713aa37ee3dfcb4fac5a5586f"
-    attachments = []
-    guild_id = 660979844179427368
+class User():
+    def __init__(
+            self, username, discrim, avatar, id_num=-1, flags=0, **kwargs):
+        dict = dpytest.factories.make_user_dict(
+            username, discrim, avatar, id_num, flags, **kwargs)
+        self.id = dict['id']
+        self.name = dict['username']
+        self.discriminator = dict['discriminator']
+        self.avatar = dict['avatar']
 
 
-# A function which makes creating test messages with custom content easy
-def custom_message(custom):
-    message.content = custom
-    return message
+testUser = User(
+    "Test", 1111, "2175ab2713aa37ee3dfcb4fac5a5586f", id_num=1234)
 
 
-'''
-{"type": 0, "tts": False,
- "timestamp": "2020-01-09T01:20:10.887000+00:00",
- "pinned": False, "nonce": "664639515201110016", "mentions": [],
- "mention_roles": [], "mention_everyone": False, "member":
- {"roles": ["660986670883274803"], "premium_since": None,
-  "nick": None, "mute": False,
-  "joined_at": "2019-12-29T22:57:55.267000+00:00",
-  "hoisted_role": "660986670883274803", "deaf": False},
- "id": "664639523833249802", "flags": 0, "embeds": [],
- "edited_timestamp": None, "content": message,
- "channel_id": "660979844179427371",
- "author": {"username": "[HU/EN] Saragon",
-        "id": "212686680052727814", "discriminator": "2988"
-        "avatar": "2175ab2713aa37ee3dfcb4fac5a5586f"},
-"attachments": [], "guild_id": "660979844179427368"}
-'''
-
-
+@pytest.mark.asyncio
 async def test_moirail():
-    MoirailV = (Main.db.QueryMoirail(1234))[0]
-    await Main.on_message(custom_message("<>"))
+    try:
+        MoirailV = (Main.db.QueryMoirail(1234))[0]
+    except TypeError:
+        MoirailV = 0
+    await dpytest.message("<>", member=testUser)
     assert (Main.db.QueryMoirail(1234))[0] == MoirailV + 1
