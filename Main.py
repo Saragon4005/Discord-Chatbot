@@ -196,6 +196,7 @@ try:
     async def on_message(message: discord.Message):
         if message.author == bot.user:
             return
+
         if '<>' in message.content:
             try:
                 MoirailV = (db.QueryMoirail(message.author.id))[0] + 1
@@ -205,14 +206,20 @@ try:
                                  Values({message.author.id},1)''')
             finally:
                 db.SQL.commit()
+
         if supression(message.content):
             await message.delete()
+
         try:
             await bot.process_commands(message)
         except AttributeError:
             print("Could not process commands \n"
                   "This is could be due to bot not being started \n"
                   "This is normal for testing")
+
+        if message.content == "shut":
+            pass
+
         db.update(f"LastMessage = {pendulum.now(tz='UTC').timestamp()}",
                   f"Id={message.author.id}")
         try:  # this creates a log for the user even if it didn't exist before
