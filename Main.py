@@ -21,7 +21,9 @@ Logger.start()
 
 # initialize discord bot
 bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
-                   case_insensitive=True)
+                   case_insensitive=True,
+                   allowed_mentions=discord.AllowedMentions(
+                       everyone=False, users=False, roles=False))
 
 
 def updateSettings():
@@ -159,6 +161,15 @@ try:
                 await ctx.send(f"Blacklist is '{blacklist}'")
         else:
             await ctx.send("Only the owner is allowed to do this")
+
+    @bot.command(name="echo")
+    async def echo(ctx: commands.Context):
+        if isOwner(ctx.author.id):
+            await ctx.send(ctx.message.content.strip(
+                f"{ctx.prefix}{ctx.invoked_with}"
+            ))
+        else:
+            await ctx.send("You are not owner")
 
     @bot.event
     async def on_ready():
