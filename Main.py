@@ -162,6 +162,15 @@ try:
         else:
             await ctx.send("Only the owner is allowed to do this")
 
+    @bot.command(name="echo")
+    async def echo(ctx: commands.Context):
+        if isOwner(ctx.author.id):
+            await ctx.send(ctx.message.content.strip(
+                f"{ctx.prefix}{ctx.invoked_with}"
+            ))
+        else:
+            await ctx.send("You are not owner")
+
     @bot.event
     async def on_ready():
         print(
