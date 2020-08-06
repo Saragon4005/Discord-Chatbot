@@ -21,7 +21,9 @@ Logger.start()
 
 # initialize discord bot
 bot = commands.Bot(command_prefix='%', description='A Bot which does a thing',
-                   case_insensitive=True)
+                   case_insensitive=True,
+                   allowed_mentions=discord.AllowedMentions(
+                       everyone=False, users=False, roles=False))
 
 
 def updateSettings():
